@@ -1,13 +1,17 @@
-package ru.otus.http.server;
+package ru.nabuhiro.java.basic.http.server;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HttpRequest {
     private String rawRequest;
     private HttpMethod method;
     private String uri;
+    private String body;
     private Map<String, String> parameters;
     private Exception exception;
+    private static final Logger LOGGER = LogManager.getLogger(HttpRequest.class);
 
     public Exception getException() {
         return exception;
@@ -21,9 +25,18 @@ public class HttpRequest {
         return uri;
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    public String getRoutingKey() {
+        return method + " " + uri;
+    }
+
     public HttpRequest(String rawRequest) {
         this.rawRequest = rawRequest;
         this.parse();
+        this.parseHeaders();
     }
 
     public String getParameter(String key) {
@@ -51,12 +64,27 @@ public class HttpRequest {
         }
     }
 
-    public void info(boolean debug) {
-        if (debug) {
-            System.out.println(rawRequest);
+    private void parseHeaders() {
+        int startIndex = rawRequest.indexOf("\r\n", rawRequest.indexOf(' ') + 1);
+        int endIndex = rawRequest.indexOf("\r\n\r\n") - 4;
+        String rawHeaders = rawRequest.substring(startIndex, endIndex);
+
+        Map<String, String> headersMap = new HashMap<>();
+        String[] splitRawHeaders = rawHeaders.split("\r\n");
+        for (int i = 1; i < splitRawHeaders.length; i++) {
+            String key = splitRawHeaders[i].split(": ", 2)[0];
+            String value = "";
+            if (splitRawHeaders[i].split(": ").length > 1) {
+                value = splitRawHeaders[i].split(": ", 2)[1];
+            }
+            headersMap.put(key, value);
         }
-        System.out.println("Method: " + method);
-        System.out.println("URI: " + uri);
-        System.out.println("Parameters: " + parameters);
     }
+        public void info() {
+            LOGGER.debug("Первоначальный запрос: {}", rawRequest);
+            LOGGER.info("Method: {}", method);
+            LOGGER.info("URI: {}", uri);
+            LOGGER.info("Parameters: {}", parameters);
+            LOGGER.info("Body: {}", body);
+        }
 }
