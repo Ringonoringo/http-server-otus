@@ -5,13 +5,17 @@ import ru.otus.http.server.processor.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Dispatcher {
     private Map<String, RequestProcessor> processors;
+    //private Set<String> possibleUrls = new HashSet<>();
     private RequestProcessor defaultNotFoundProcessor;
     private RequestProcessor defaultInternalServerErrorProcessor;
     private RequestProcessor defaultBadRequestProcessor;
+    //private RequestProcessor defaultMethodNotAllowedProcessor;
 
     public Dispatcher() {
         this.processors = new HashMap<>();
