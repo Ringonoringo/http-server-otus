@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class DefaultBadRequestProcessor implements RequestProcessor {
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
-        String response = "" +
+        String response = " " +
                 "HTTP/1.1 400 Bad Request\r\n" +
                 "Content-Type: text/html\r\n" +
                 "\r\n" +

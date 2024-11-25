@@ -1,4 +1,6 @@
 package ru.otus.http.server;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ public class HttpRequest {
     private String uri;
     private Map<String, String> parameters;
     private Exception exception;
-
+    private static final Logger LOGGER = LogManager.getLogger(HttpRequest.class);
     public Exception getException() {
         return exception;
     }
@@ -55,8 +57,8 @@ public class HttpRequest {
         if (debug) {
             System.out.println(rawRequest);
         }
-        System.out.println("Method: " + method);
-        System.out.println("URI: " + uri);
-        System.out.println("Parameters: " + parameters);
+        LOGGER.info("Method: {}", method);
+        LOGGER.info("URI: {}",  uri);
+        LOGGER.info("Parameters: {}", parameters);
     }
 }
